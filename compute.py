@@ -1,6 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+def save_theta(theta, x, y):
+	a = (y[0] - y[1]) / (x[0] - x[1])
+	b = a * x[0] * -1 + y[0]
+	theta = [b, a]
+	np.savetxt("theta.csv", theta, delimiter = ',');
+
 def plot_data(data, x, y):
 	plt.plot(data[:, 0], data[:, 1], 'o')
 	plt.plot(x, y)
@@ -19,10 +25,7 @@ def estimate_price(theta_0, theta_1, x):
 
 def compute_gradients(x, y, m, theta, alpha, iterations):
 	for i in range(0, iterations):
-		if (i == 0):
-			tmp_theta = theta.copy()
-		else:
-			tmp_theta = np.zeros((1, 2))
+		tmp_theta = np.zeros((1, 2))
 		for j in range(0, m):
 			tmp_theta[0, 0] += (estimate_price(theta[0, 0], theta[0, 1], x[j]) - y[j])
 			tmp_theta[0, 1] += ((estimate_price(theta[0, 0], theta[0, 1], x[j]) - y[j]) * x[j])
@@ -31,6 +34,8 @@ def compute_gradients(x, y, m, theta, alpha, iterations):
 
 def main():
 	data = np.loadtxt("data.csv", dtype = np.longdouble, delimiter = ',', skiprows = 1)
+	if (len(data) < 2):
+		exit()
 	x = standardize(data[:, 0])
 	y = standardize(data[:, 1])
 	m = len(data)
@@ -41,6 +46,7 @@ def main():
 	y = estimate_price(theta[0, 0], theta[0, 1], x)
 	x = destandardize(x, data[:, 0])
 	y = destandardize(y, data[:, 1])
+	save_theta(theta, x, y)
 	plot_data(data, x, y)
 
 if __name__ == "__main__":
