@@ -3,6 +3,10 @@ import numpy as np
 def estimate_price(theta_0, theta_1, x):
 	return theta_0 + theta_1 * x
 
+
+#	Loads the computed weights of the linear regression
+#	Takes a number input and prints the prediction based on the weights
+
 def main():
 	theta = np.loadtxt("theta.csv", dtype = np.longdouble, delimiter = ',')
 	try:
